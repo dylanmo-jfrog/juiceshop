@@ -21,7 +21,9 @@ jobs:
            node-version: '22'
            
        - name: Set CLI Config
-         run: jf npm-config --global=true --repo-resolve=dylanmo-npm --repo-deploy=dylanmo-npm
+         run: |
+           jf npm-config --global=true --repo-resolve=dylanmo-npm --repo-deploy=dylanmo-npm
+           cd frontend && jf npm-config --repo-resolve=dylanmo-npm --repo-deploy=dylanmo-npm
            
        - name: Install Deps
          run: jf npm install
