@@ -1,0 +1,12 @@
+# Frogbot configuration file
+# Documentation: https://jfrog.com/help/r/jfrog-security-user-guide/developers/frogbot
+
+# Set npm install command with legacy peer deps to handle dependency conflicts
+params:
+  npm:
+    # Use legacy peer deps to resolve dependency conflicts
+    installCommand: "jf npm install --ignore-scripts
+           cd frontend && jf npm install --ignore-scripts --legacy-peer-deps"
+
+# Alternative format if the above doesn't work:
+# installDepsCmd: "npm install --ignore-scripts --package-lock-only --legacy-peer-deps"
