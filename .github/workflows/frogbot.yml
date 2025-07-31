@@ -25,6 +25,26 @@ jobs:
         # The repository scanning will be triggered periodically on the following branches.
         branch: ["master"]
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Setup JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v4
+        env:  
+          JF_URL: ${{ vars.JF_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+          
+      - name: Setup Dependencies
+        run: |
+          # Configure npm for root directory
+          jf npm-config --global=true --repo-resolve=dylanmo-npm --repo-deploy=dylanmo-npm
+          jf npm install --ignore-scripts --legacy-peer-deps
+          
+          # Configure npm for frontend directory  
+          cd frontend
+          jf npm-config --repo-resolve=dylanmo-npm --repo-deploy=dylanmo-npm
+          jf npm install --ignore-scripts --legacy-peer-deps
+          
       - uses: jfrog/frogbot@v2
         # [Mandatory if using OIDC authentication protocol instead of JF_ACCESS_TOKEN]
         # Insert to oidc-provider-name the 'Provider Name' defined in the OIDC integration configured in the JPD
@@ -35,4 +55,4 @@ jobs:
           JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           JF_GIT_BASE_BRANCH: ${{ matrix.branch }}    # For repository scan action
-          JF_INSTALL_DEPS_COMMAND: "npm install --ignore-scripts --package-lock-only --legacy-peer-deps"
+          JF_INSTALL_DEPS_COMMAND: "echo 'Dependencies already installed in previous step'"
