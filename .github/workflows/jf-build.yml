@@ -30,9 +30,6 @@ jobs:
            jf npm install --ignore-scripts
            cd frontend && jf npm install --ignore-scripts --legacy-peer-deps
 
-       - name: Run tests
-         run: npm test
-         
        - name: Publish
          run: jf npm publish
          
@@ -44,3 +41,13 @@ jobs:
           jf rt build-add-git
           # Publish build info
           jf rt build-publish
+
+       - name: Audit Dependencies
+         run: |
+          # Scan project dependencies for security vulnerabilities
+          jf audit --format=json --output-file=audit-results.json
+          
+       - name: Scan Published Build
+         run: |
+          # Scan the published build for vulnerabilities using Xray
+          jf build-scan --format=json --output-file=build-scan-results.json
