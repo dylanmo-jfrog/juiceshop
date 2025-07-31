@@ -26,8 +26,10 @@ jobs:
            cd frontend && jf npm-config --repo-resolve=dylanmo-npm --repo-deploy=dylanmo-npm
            
        - name: Install Deps
-         run: jf npm install
-           
+         run: |
+           jf npm install --ignore-scripts
+           cd frontend && jf npm install --ignore-scripts --legacy-peer-deps
+
        - name: Run tests
          run: npm test
          

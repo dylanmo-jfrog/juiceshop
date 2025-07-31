@@ -1,7 +1,5 @@
 # Frogbot configuration file
 # Documentation: https://jfrog.com/help/r/jfrog-security-user-guide/developers/frogbot
 
-# Configure npm to use JFrog CLI with legacy peer deps for dependency resolution
-params:
-  npm:
-    installCommand: "jf npm-config --global=true --repo-resolve=dylanmo-npm --repo-deploy=dylanmo-npm && jf npm install --ignore-scripts --legacy-peer-deps && cd frontend && jf npm-config --repo-resolve=dylanmo-npm --repo-deploy=dylanmo-npm && jf npm install --ignore-scripts --legacy-peer-deps"
+# Configure install command for npm with JFrog CLI and legacy peer deps
+installCommand: "jf npm-config --global=true --repo-resolve=dylanmo-npm --repo-deploy=dylanmo-npm && jf npm install --ignore-scripts --legacy-peer-deps && cd frontend && jf npm-config --repo-resolve=dylanmo-npm --repo-deploy=dylanmo-npm && jf npm install --ignore-scripts --legacy-peer-deps"
