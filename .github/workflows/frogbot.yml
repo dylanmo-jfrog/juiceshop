@@ -43,16 +43,37 @@ jobs:
           # Configure npm for frontend directory  
           cd frontend
           jf npm-config --repo-resolve=dylanmo-npm --repo-deploy=dylanmo-npm
-          jf npm install --ignore-scripts --legacy-peer-deps
+          jf npm install --ignore-scripts --legacy-peer-deps --force
           
       - name: Generate Package Lock Files
         run: |
+          # Clean any existing package-lock files to start fresh
+          rm -f package-lock.json
+          rm -f frontend/package-lock.json
+          
+          # Backup original .npmrc files
+          cp .npmrc .npmrc.bak
+          cp frontend/.npmrc frontend/.npmrc.bak
+          
+          # Temporarily enable package-lock generation for scanning
+          echo "package-lock=true" >> .npmrc
+          echo "legacy-peer-deps=true" >> .npmrc
+          
           # Generate package-lock.json for root directory using JFrog Artifactory
           jf npm install --package-lock-only --ignore-scripts
           
           # Generate package-lock.json for frontend directory with legacy peer deps using JFrog Artifactory
           cd frontend
-          jf npm install --package-lock-only --ignore-scripts --legacy-peer-deps
+          echo "package-lock=true" >> .npmrc
+          echo "legacy-peer-deps=true" >> .npmrc
+          jf npm install --package-lock-only --ignore-scripts --legacy-peer-deps --force
+          
+      - name: Restore NPM Configuration
+        if: always()
+        run: |
+          # Restore original .npmrc files
+          mv .npmrc.bak .npmrc || true
+          mv frontend/.npmrc.bak frontend/.npmrc || true
           
       - uses: jfrog/frogbot@v2
         # [Mandatory if using OIDC authentication protocol instead of JF_ACCESS_TOKEN]

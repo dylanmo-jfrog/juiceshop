@@ -45,9 +45,9 @@ jobs:
        - name: Audit Dependencies
          run: |
           # Scan project dependencies for security vulnerabilities
-          jf audit --format=json --output-file=audit-results.json
+          jf audit --format=json > audit-results.json
           
        - name: Scan Published Build
          run: |
           # Scan the published build for vulnerabilities using Xray
-          jf build-scan --format=json --output-file=build-scan-results.json
+          jf build-scan --format=json > build-scan-results.json
